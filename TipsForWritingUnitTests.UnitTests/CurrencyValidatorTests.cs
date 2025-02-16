@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using TipsForWritingUnitTests.Models;
-using TipsForWritingUnitTests.Services;
 using TipsForWritingUnitTests.Validators;
 using Xunit;
 
@@ -16,10 +15,12 @@ public class CurrencyValidatorTests
         yield return [new Currency("USD", "United States Dollar", "$")];
         yield return [new Currency("EUR", "Euro", "€")];
     }
+    
+    private Currency Gbp => new("GBP", "Great British Pounds", "£");
 
     [Theory]
     [MemberData(nameof(GetValidCurrencies))]
-    public void PassingModel_ValidationSucceeds(Currency currency)
+    public void PassingModel_Multiple_ValidationSucceeds(Currency currency)
     {
         var result = _currencyValidator.Validate(currency);
         
@@ -27,9 +28,18 @@ public class CurrencyValidatorTests
     }
     
     [Fact]
+    public void PassingModel_ValidationSucceeds()
+    {
+        var result = _currencyValidator.Validate(Gbp);
+        
+        result.IsValid.Should().BeTrue();
+    }
+    
+    [Fact]
     public void Iso3Code_IsEmpty_ValidationFails()
     {
-        var currency = new Currency(string.Empty, "United States Dollar", "$");
+        var currency = Gbp;
+        currency.Iso3Code = "";
         
         var result = _currencyValidator.Validate(currency);
         
