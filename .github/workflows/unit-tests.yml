@@ -26,11 +26,11 @@ jobs:
         run: dotnet build --configuration Release --no-restore  
 
       - name: Run tests  
-        run: dotnet test --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"  
+        run: dotnet test --configuration Release --no-build --logger "trx;LogFileName=TestResults/test-results.trx"
 
       - name: Publish test results  
         if: always()  
         uses: actions/upload-artifact@v4  
         with:  
           name: test-results  
-          path: TestResults  
+          path: TestResults
